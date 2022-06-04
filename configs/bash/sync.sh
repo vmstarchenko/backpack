@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
-set -exu
-
-cd "$(dirname "$0")"
+set -eu
 
 echo "Sync bash configs"
 
-sed -n '/LOCALS HERE/,/LOCALS END/p' ~/.bashrc > ./.bashrc
+cd "$(dirname "$0")"
+
+val=$(sed -n '/LOCALS HERE/,/LOCALS END/p' ~/.bashrc)
+
+[ -z "$val" ] && exit 0;
+
+echo -ne "$val" > ./.bashrc
+echo "Bash configs synced"
