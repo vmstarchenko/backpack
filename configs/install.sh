@@ -2,4 +2,6 @@
 
 set -eu
 cd "$(dirname "$0")"
+
+./bash/install.sh
 ./vim/install.sh
