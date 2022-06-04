@@ -6,7 +6,7 @@ echo "Install bash configs"
 
 cd "$(dirname "$0")"
 if grep -q "# LOCALS HERE" ~/.bashrc; then
-  echo "WARNING: skip .bashrc init (locals section exists)"
+  echo "WARNING: skip .bashrc init (locals section exists), you should install bashrc local config manually"
 else
   echo -ne "\n\n" >> ~/.bashrc
   cat .bashrc >> ~/.bashrc

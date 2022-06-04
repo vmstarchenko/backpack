@@ -4,6 +4,6 @@ set -eu
 
 cd "$(dirname "$0")"
 
-# ./bash/sync.sh
+./bash/sync.sh
 ./vim/sync.sh
 # ./firejail/sync.sh
