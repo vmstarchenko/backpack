@@ -9,5 +9,6 @@ if ! command -v firejail &> /dev/null; then
 fi
 
 cd "$(dirname "$0")"
+
 mkdir ~/.config/firejail -p
 cp -a ./settings/. ~/.config/firejail
