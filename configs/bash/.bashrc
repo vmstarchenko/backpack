@@ -1,4 +1,7 @@
 # LOCALS HERE
+echo -ne "[1;33mWARNING: it is your real system shell, be careful![0m
+"
+
 alias on="source venv/bin/activate"
 alias off="deactivate"
 alias vm="mv"
