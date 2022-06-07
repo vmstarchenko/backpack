@@ -1,7 +1,7 @@
 down:
 	podman-compose down -t 1
 
-start:
+start: down
 	podman-compose build && podman-compose run server bash
 
 up: down

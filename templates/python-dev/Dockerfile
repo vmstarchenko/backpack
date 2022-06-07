@@ -1,5 +1,9 @@
 # syntax=docker/dockerfile:1
-FROM python:3.10-slim-bullseye
+FROM docker.io/library/python:3.10-slim-bullseye
+
+ARG UNAME=user
+ARG UID=1000
+ARG GID=1000
 
 ENV PYTHONUNBUFFERED=1
 
@@ -10,10 +14,13 @@ RUN set -ex \
       -y \
     && rm -rf /var/lib/apt/lists/*
 
-RUN useradd --create-home --shell /bin/bash --home /home/user user
-USER user
-WORKDIR /home/user
+RUN set -ex \
+    && groupadd -g $GID -o $UNAME \
+    && useradd --create-home --shell /bin/bash --home /home/$UNAME \
+        -u $UID -g $GID $UNAME
+USER $UNAME
+WORKDIR /home/$UNAME
 
-ENV VIRTUAL_ENV /home/user/venv
-ENV PATH /home/user/venv/bin:$PATH
+ENV VIRTUAL_ENV /home/$UNAME/venv
+ENV PATH /home/$UNAME/venv/bin:$PATH
 ENV TERM xterm-256color
