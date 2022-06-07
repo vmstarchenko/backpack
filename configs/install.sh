@@ -4,6 +4,6 @@ set -eu
 
 cd "$(dirname "$0")"
 
-./bash/install.sh
+./bash/install.py
 ./vim/install.sh
 ./firejail/install.sh

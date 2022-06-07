@@ -12,4 +12,4 @@ cd "$(dirname "$0")"
 
 mkdir ~/.config/firejail -p
 cp -a ./settings/. ~/.config/firejail
-echo "WARNING: for global installation exec '$ sudo cp -i ~/.config/firejail/* /etc/firejail/'";
+echo "  WARNING: for global installation exec '$ sudo cp -i ~/.config/firejail/* /etc/firejail/'";
