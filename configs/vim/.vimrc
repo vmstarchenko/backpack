@@ -9,13 +9,17 @@
 filetype plugin on
 filetype indent plugin on
 
-set wildmenu
- 
 syntax on
+set autoindent
+set autoread
+set expandtab
+set nocompatible
 set nowrap
 set number
-
-set nocompatible
+set shiftwidth=4
+set smartindent
+set tabstop=4
+set wildmenu
 
  
 augroup resCur
@@ -24,27 +28,12 @@ augroup resCur
 augroup END
  
 filetype plugin indent on
-"set tabstop=4
-"set shiftwidth=4
-"set expandtab
-
-"augroup typescript
-"  au!
-"  autocmd BufNewFile,BufRead *.tsx set filetype=typescript
-"  autocmd FileType typescript setlocal shiftwidth=2 tabstop=2
-"augroup END
-
-"augroup css
-"  au!
-"  autocmd BufNewFile,BufRead *.scss set filetype=css
-"  autocmd FileType css setlocal shiftwidth=2 tabstop=2
-"augroup END
-
 
 colo xop2
 
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType sh setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType scss setlocal shiftwidth=2 tabstop=2
+autocmd FileType typescriptreact setlocal shiftwidth=2 tabstop=2
 
-set autoread
