@@ -51,6 +51,6 @@ hi DiffText		guibg=olivedrab		guifg=black		ctermbg=lightGreen	ctermfg=black
 hi DiffAdd		guibg=slateblue		guifg=black		ctermbg=blue		ctermfg=black
 hi DiffDelete   guibg=coral			guifg=black	ctermbg=cyan		ctermfg=black
 
-hi Folded		guibg=orange		guifg=black		ctermbg=yellow		ctermfg=black
+hi Folded		guibg=orange		guifg=black		ctermbg=gray		ctermfg=black
 hi FoldColumn	guibg=gray30		guifg=black	ctermbg=gray		ctermfg=black
 hi cIf0			guifg=gray			ctermfg=gray
