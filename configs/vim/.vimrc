@@ -34,7 +34,8 @@ autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType sh setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType scss setlocal shiftwidth=2 tabstop=2
-autocmd FileType typescriptreact setlocal shiftwidth=2 tabstop=2
+autocmd FileType typescriptreact setlocal ts=2 sts=2 sw=2 shiftwidth=2 tabstop=2 expandtab
+autocmd FileType typescript setlocal ts=2 sts=2 sw=2 shiftwidth=2 tabstop=2 expandtab
 autocmd FileType python setlocal foldmethod=indent
 
 " FOLD
