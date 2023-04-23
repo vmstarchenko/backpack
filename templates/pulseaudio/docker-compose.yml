@@ -10,3 +10,7 @@ services:
     volumes:
       - ./var/home:/home/user
       - ./:/home/user/app
+      - /tmp/pulseaudio.socket:/tmp/pulseaudio.socket
+    environment:
+      PULSE_SERVER: unix:/tmp/pulseaudio.socket
+      PULSE_COOKIE: /tmp/pulseaudio.cookie

@@ -1,16 +1,14 @@
 # syntax=docker/dockerfile:1
-FROM docker.io/library/python:3.10-slim-bullseye
+FROM docker.io/library/ubuntu:22.04
 
 ARG UNAME=user
 ARG UID=1000
 ARG GID=1000
 
-ENV PYTHONUNBUFFERED=1
-
 RUN set -ex \
     && apt-get update \
     && apt-get install \
-      curl gcc vim make git wget cmake \
+      curl gcc vim make git wget cmake less \
       -y \
     && rm -rf /var/lib/apt/lists/*
 
@@ -23,6 +21,4 @@ USER $UNAME
 RUN mkdir /home/$UNAME/app
 WORKDIR /home/$UNAME/app
 
-ENV VIRTUAL_ENV /home/$UNAME/app/venv
-ENV PATH /home/$UNAME/app/venv/bin:$PATH
 ENV TERM xterm-256color

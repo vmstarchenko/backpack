@@ -4,8 +4,8 @@ down:
 start: down
 	podman-compose build && podman-compose run server bash
 
-up: down
-	podman-compose build && podman-compose up
+# up: down
+# 	podman-compose build && podman-compose up
 
 clear:
 	python -Bc "import pathlib; [p.unlink() for p in pathlib.Path('.').rglob('*.py[co]')]"
