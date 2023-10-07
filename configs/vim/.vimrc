@@ -87,6 +87,8 @@ endfunction
 
 inoremap <silent><expr> <cr> CursorIsBetweenBrackets() ? "\<c-g>u\<cr>\<BS>\<Up>\<End>\<cr>" : "\<c-g>u\<cr>"
 
+let g:pyindent_open_paren=shiftwidth()
+
 " tree
 "let g:netrw_banner = 0
 let g:netrw_liststyle = 3
