@@ -104,3 +104,10 @@ let g:cssColorVimDoNotMessMyUpdatetime = 1
 " set equalprg=clang-format
 " autocmd FileType cpp local equalprg=clang-format
 
+inoremap <expr> <Tab> getline('.')[col('.')-2] !~ '^\s\?$' \|\| pumvisible()
+      \ ? '<C-N>' : '<Tab>'
+inoremap <expr> <S-Tab> pumvisible() \|\| getline('.')[col('.')-2] !~ '^\s\?$'
+      \ ? '<C-P>' : '<Tab>'
+autocmd CmdwinEnter * inoremap <expr> <buffer> <Tab>
+      \ getline('.')[col('.')-2] !~ '^\s\?$' \|\| pumvisible()
+      \ ? '<C-X><C-V>' : '<Tab>'

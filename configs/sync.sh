@@ -8,3 +8,4 @@ cd "$(dirname "$0")"
 ./vim/sync.sh
 # ./firejail/sync.sh
 ./lib/sync.sh
+./bin/sync.sh
