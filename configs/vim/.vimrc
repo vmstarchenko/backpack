@@ -10,7 +10,7 @@ filetype plugin on
 filetype indent plugin on
 
 syntax on
-set autoindent
+"set autoindent
 set autoread
 set expandtab
 set nocompatible
@@ -37,6 +37,9 @@ autocmd FileType scss setlocal shiftwidth=2 tabstop=2
 autocmd FileType typescriptreact,typescript setlocal ts=2 sts=2 sw=2 shiftwidth=2 tabstop=2 expandtab
 autocmd FileType python setlocal foldmethod=indent
 set equalprg=clang-format2
+
+"https://stackoverflow.com/questions/39553825/vim-double-indents-python-files
+let g:pyindent_open_paren=4
 
 " FOLD
 "" remember fold
@@ -106,3 +109,10 @@ let g:cssColorVimDoNotMessMyUpdatetime = 1
 " set equalprg=clang-format
 " autocmd FileType cpp local equalprg=clang-format
 
+inoremap <expr> <Tab> getline('.')[col('.')-2] !~ '^\s\?$' \|\| pumvisible()
+      \ ? '<C-N>' : '<Tab>'
+inoremap <expr> <S-Tab> pumvisible() \|\| getline('.')[col('.')-2] !~ '^\s\?$'
+      \ ? '<C-P>' : '<Tab>'
+autocmd CmdwinEnter * inoremap <expr> <buffer> <Tab>
+      \ getline('.')[col('.')-2] !~ '^\s\?$' \|\| pumvisible()
+      \ ? '<C-X><C-V>' : '<Tab>'

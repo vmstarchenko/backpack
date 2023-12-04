@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        GID: ${GROUP_ID}
+        UID: ${USER_ID}
+    volumes:
+      - ./var/home:/home/user
+      - ~/Documents/planner:/home/user/Documents
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    environment:
+      DISPLAY: ":0"
+      QT_FONT_DPI: "196"
+    command: ["planner"]

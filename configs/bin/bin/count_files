@@ -1,0 +1,36 @@
+#!/usr/bin/env python
+
+from simplecli import require
+require('fire==0.4.0', venv='.venv')
+
+import fire
+import os
+import sys
+
+def count_files(path):
+    total = 0
+    for _root, _dirs, files in os.walk(path):
+        total += len(files)
+
+    return total
+
+
+def main(*paths, sort=False):
+    res = []
+    for path in paths:
+        if not os.path.isdir(path):
+            continue
+        files = count_files(path)
+        if sort:
+            res.append((files, path))
+        else:
+            print(f'{files: 8} {path}')
+
+    res.sort(reverse=True)
+    for files, path in res:
+        print(f'{files: 8} {path}')
+
+
+if __name__ == '__main__':
+    import fire
+    fire.Fire(main)

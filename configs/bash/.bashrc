@@ -12,5 +12,6 @@ export USER_ID="`id -g $USER`"
 
 export HISTSIZE=20000
 export HISTFILESIZE=20000
-export PATH="$USER/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PYTHONPATH="$HOME/lib:$PYTHONPATH"
 # LOCALS END
