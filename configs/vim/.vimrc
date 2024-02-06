@@ -30,8 +30,11 @@ filetype plugin indent on
 
 colo xop2
 
+
 au BufRead,BufNewFile,BufReadPost *.yml set filetype=yaml
-autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+"autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab indentkeys-=0# indentkeys-=<:>
+
 autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType sh setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType scss setlocal shiftwidth=2 tabstop=2
