@@ -38,7 +38,10 @@ def main():
         with open(bashrc_custom, 'w') as out:
             out.write(local_section)
     else:
-        os.unlink(bashrc_custom)
+        try:
+            os.unlink(bashrc_custom)
+        except FileNotFoundError:
+            pass
         os.symlink(
             os.path.join(root, '.bashrc'),
             bashrc_custom)
