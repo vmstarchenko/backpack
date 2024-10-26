@@ -14,4 +14,5 @@ export HISTSIZE=20000
 export HISTFILESIZE=20000
 export PATH="$HOME/.local/bin:$PATH"
 export PYTHONPATH="$HOME/lib:$PYTHONPATH"
+export HOSTALIASES="$HOME/.hosts"
 # LOCALS END

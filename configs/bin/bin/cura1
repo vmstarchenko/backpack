@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+cd ~/lib/cura1
+export ARG="$@"
+echo $ARG
+make up

@@ -30,6 +30,7 @@ filetype plugin indent on
 
 colo xop2
 
+au BufRead,BufNewFile,BufReadPost *.yml set filetype=yaml
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType sh setlocal ts=2 sts=2 sw=2 expandtab
@@ -88,9 +89,7 @@ function CursorIsBetweenBrackets(bracketSets = ["{}"])
     return 0
 endfunction
 
-inoremap <silent><expr> <cr> CursorIsBetweenBrackets() ? "\<c-g>u\<cr>\<BS>\<Up>\<End>\<cr>" : "\<c-g>u\<cr>"
-
-let g:pyindent_open_paren=shiftwidth()
+inoremap <silent><expr> <cr> CursorIsBetweenBrackets() ? "\<c-g>u\<cr>\<Up>\<End>\<cr>" : "\<c-g>u\<cr>"
 
 " tree
 "let g:netrw_banner = 0
