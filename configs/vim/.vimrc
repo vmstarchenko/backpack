@@ -15,6 +15,7 @@ set autoread
 set expandtab
 set nocompatible
 set nowrap
+set wrap
 set number
 set shiftwidth=4
 set smartindent
@@ -118,3 +119,11 @@ inoremap <expr> <S-Tab> pumvisible() \|\| getline('.')[col('.')-2] !~ '^\s\?$'
 autocmd CmdwinEnter * inoremap <expr> <buffer> <Tab>
       \ getline('.')[col('.')-2] !~ '^\s\?$' \|\| pumvisible()
       \ ? '<C-X><C-V>' : '<Tab>'
+
+" fixing up moving line by line in the paragraph
+nnoremap j gj
+nnoremap k gk
+vnoremap j gj
+vnoremap k gk
+
+nnoremap g[ <C-t>
