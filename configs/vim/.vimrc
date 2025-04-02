@@ -5,7 +5,6 @@
 "Plugin 'sheerun/vim-polyglot'
 "call vundle#end()    
 
-
 filetype plugin on
 filetype indent plugin on
 
@@ -21,6 +20,13 @@ set shiftwidth=4
 set smartindent
 set tabstop=4
 set wildmenu
+
+" Устанавливаем пробел как leader клавишу
+let mapleader = ","
+" nnoremap <Space> <Nop>
+set notimeout
+set ttimeout
+set ttimeoutlen=100
 
 augroup resCur
   autocmd!
@@ -46,6 +52,12 @@ set equalprg=clang-format2
 "https://stackoverflow.com/questions/39553825/vim-double-indents-python-files
 let g:pyindent_open_paren=4
 
+nnoremap <leader>o :tabedit 
+nnoremap <leader>s :w<CR>
+nnoremap <leader>q :q
+nnoremap <leader>q! :q!
+nnoremap <leader>qa :qa
+
 " FOLD
 "" remember fold
 augroup remember_folds
@@ -54,10 +66,10 @@ augroup remember_folds
   autocmd BufWinEnter * silent! loadview
 augroup END
 
-set foldmethod=syntax
-set foldnestmax=2
-set nofoldenable
-set foldlevel=2
+set foldenable
+set foldmethod=indent
+set foldnestmax=20
+set foldlevel=20
 
 " braces
 function! CountCharsFull(str, char)
@@ -101,7 +113,6 @@ inoremap <expr> ) strpart(getline('.'), col('.')-1, 1) == ")" ? "\<Right>" : ")"
 inoremap <expr> } strpart(getline('.'), col('.')-1, 1) == "}" ? "\<Right>" : "}"
 inoremap <expr> ] strpart(getline('.'), col('.')-1, 1) == "]" ? "\<Right>" : "]"
 
-" Функция для умной вставки кавычек
 function! SmartQuotes(quote)
   let line = getline('.')
   let col = col('.') - 1  " col('.') возвращает позицию курсора начиная с 1, а индексы в строке начинаются с 0
@@ -118,17 +129,61 @@ function! SmartQuotes(quote)
   " Если количество кавычек четное (или ноль)
   elseif quote_count % 2 == 0
     return a:quote . a:quote . "\<Left>"  " Вставляем пару кавычек и перемещаем курсор между ними
-  " Если количество кавычек нечетное
   else
     return a:quote  " Вставляем только одну кавычку
   endif
 endfunction
 
-" Применяем функцию к двойным кавычкам
 inoremap <expr> " SmartQuotes('"')
-" Применяем функцию к одинарным кавычкам (если нужно)
 inoremap <expr> ' SmartQuotes("'")
 inoremap <expr> ` SmartQuotes('`')
+
+" call writefile([string(getpos('.')[1:2]) . " " . string(getpos("'<")[1:2]) . " " . string(getpos("'>")[1:2]) . " " . cursor_at_start . " " . cursor_line . " " . cursor_col], "/tmp/vim_debug.log", "a")
+function! SurroundSelection(open, close)
+    let cursor_pos = getpos('.')[1:2]
+
+    let cursor_line = line('.')
+    let cursor_col = col('.')
+    
+    " Получаем начало и конец выделения
+    let [line_start, col_start] = getpos("'<")[1:2]
+    let [line_end, col_end] = getpos("'>")[1:2]
+   
+    let cursor_at_start = (cursor_pos[0] == line_start && cursor_pos[1] == col_start) 
+    
+    " Добавляем закрывающий символ в конец выделения
+    call cursor(line_end, col_end)
+    execute "normal! a" . a:close
+    
+    " Добавляем открывающий символ в начало выделения
+    call cursor(line_start, col_start)
+    execute "normal! i" . a:open
+    
+    " Корректируем новые позиции выделения
+    let new_col_start = col_start + len(a:open)
+    let new_col_end = col_end + len(a:open)
+    
+    if cursor_at_start
+        call cursor(line_end, new_col_end)
+        execute "normal! \<Esc>v"
+        call cursor(line_start, new_col_start)
+    else
+        call cursor(line_start, new_col_start)
+        execute "normal! \<Esc>v"
+        call cursor(line_end, new_col_end)
+    endif
+endfunction
+
+vnoremap <silent> <leader>( <Esc>:call SurroundSelection('(', ')')<CR>
+vnoremap <silent> <leader>) <Esc>:call SurroundSelection('(', ')')<CR>
+vnoremap <silent> <leader>[ <Esc>:call SurroundSelection('[', ']')<CR>
+vnoremap <silent> <leader>] <Esc>:call SurroundSelection('[', ']')<CR>
+vnoremap <silent> <leader>{ <Esc>:call SurroundSelection('{', '}')<CR>
+vnoremap <silent> <leader>} <Esc>:call SurroundSelection('{', '}')<CR>
+vnoremap <silent> <leader>" <Esc>:call SurroundSelection('"', '"')<CR>
+vnoremap <silent> <leader>' <Esc>:call SurroundSelection("'", "'")<CR>
+vnoremap <silent> <leader>` <Esc>:call SurroundSelection('`', '`')<CR>
+
 
 " переводы строк
 function PreviousCharacter() abort
@@ -192,12 +247,20 @@ nnoremap g[ <C-t>
 nnoremap ds :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 
 " Поиск
-let mapleader = ","
-" Подсветка совпадений поиска
-set hlsearch
+set hlsearch " Подсветка совпадений поиска
+
+function! GetSelectedText()
+    call SaveRegister()
+    
+    execute 'silent normal! gv"' . s:fallback_register . 'y'
+    let selected_text = getreg(s:fallback_register)
+    
+    call RestoreRegister()
+    return selected_text
+endfunction
 
 function! SearchAndReplace(search_text)
-  let search = a:search_text == "" ? input("Search for: ", expand("<cword>")) : a:search_text
+  let search = a:search_text == "" ? input("Replace from: ", expand("<cword>")) : a:search_text
   if search == "" | return | endif
   if !exists("s:last_replace")
 	let s:last_replace = ""
@@ -207,7 +270,89 @@ function! SearchAndReplace(search_text)
   call feedkeys(":%s/" . search . "/" . replace . "/gc", "n")
 endfunction
 
-vnoremap <leader>s :call SearchAndReplace("<C-r><C-w>")<CR>
-nnoremap <leader>s :call SearchAndReplace("")<CR>
+vnoremap <leader>r :call SearchAndReplace(GetSelectedText())<CR>
+nnoremap <leader>r :call SearchAndReplace("")<CR>
 
-set langmap=ёйцукенгшщзхъфывапролджэячсмитьбюЁЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ;`qwertyuiop[]asdfghjkl\\;'zxcvbnm\\,.~QWERTYUIOP{}ASDFGHJKL:\\"ZXCVBNM<>
+function! Search(search_text)
+  let search = a:search_text == "" ? expand("<cword>") : a:search_text
+  if search == "" | return | endif
+  call feedkeys("/" . search, "n")
+endfunction
+
+vnoremap <leader>f :call Search(GetSelectedText())<CR>
+nnoremap <leader>f :call Search("")<CR>
+
+
+set langmap=ёйцукенгшщзхъфывапролджэячсмитьбюЁЙЦУКЕHГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ;`qwertyuiop[]asdfghjkl\\;'zxcvbnm\\,.~QWERTYUIOP{}ASDFGHJKL:\\"ZXCVBNM<>
+
+let g:llama_config = {
+    \ 'show_info': 0,
+    \ 'keymap_trigger': '<leader>l',
+    \ }
+
+" Vim config for cross-platform clipboard interaction
+" Leader key setup (uncomment to change)
+" let mapleader = ","
+
+" Function to check clipboard support
+function! HasClipboardSupport()
+  return has('clipboard') || has('xterm_clipboard')
+endfunction
+
+" Function to check if xclip is available
+function! HasXClip()
+  return executable('xclip')
+endfunction
+
+" Dedicated register for fallback
+let s:fallback_register = 'z'
+
+" Save original register content before operations
+function! SaveRegister()
+  let s:saved_reg = getreg(s:fallback_register)
+  let s:saved_regtype = getregtype(s:fallback_register)
+endfunction
+
+" Restore register content after operations
+function! RestoreRegister()
+  call setreg(s:fallback_register, s:saved_reg, s:saved_regtype)
+endfunction
+
+" Setup mappings based on available methods
+if HasClipboardSupport()
+  nnoremap <leader>c "+y
+  vnoremap <leader>c "+y
+  nnoremap <leader>x "+d
+  vnoremap <leader>x "+d
+  nnoremap <leader>v "+p
+  vnoremap <leader>v "+p
+  nnoremap <leader>V "+P
+  vnoremap <leader>V "+P
+  inoremap <C-,> <C-r>+
+  inoremap <C-.> <Esc>"+Pi
+
+elseif HasXClip()
+  vnoremap <silent> <leader>c :w !xclip -selection clipboard<CR><CR>
+  nnoremap <silent> <leader>c :w !xclip -selection clipboard<CR><CR>
+  vnoremap <silent> <leader>x :w !xclip -selection clipboard<CR>gvd<CR>
+  nnoremap <silent> <leader>x :w !xclip -selection clipboard<CR>dd<CR>
+  nnoremap <silent> <leader>v :r !xclip -selection clipboard -o<CR>
+  vnoremap <silent> <leader>v c<ESC>:r !xclip -selection clipboard -o<CR>
+  nnoremap <silent> <leader>V :-1r !xclip -selection clipboard -o<CR>
+  vnoremap <silent> <leader>V c<ESC>:-1r !xclip -selection clipboard -o<CR>
+  inoremap <silent> <C-,> <ESC>:r !xclip -selection clipboard -o<CR>a
+  inoremap <silent> <C-.> <ESC>:-1r !xclip -selection clipboard -o<CR>a
+
+else
+  nnoremap <silent> <leader>c :call SaveRegister()<CR>"zy:call RestoreRegister()<CR>
+  vnoremap <silent> <leader>c :call SaveRegister()<CR>"zy:call RestoreRegister()<CR>
+  nnoremap <silent> <leader>x :call SaveRegister()<CR>"zd:call RestoreRegister()<CR>
+  vnoremap <silent> <leader>x :call SaveRegister()<CR>"zd:call RestoreRegister()<CR>
+  nnoremap <silent> <leader>v :call SaveRegister()<CR>"zp:call RestoreRegister()<CR>
+  vnoremap <silent> <leader>v :call SaveRegister()<CR>"zp:call RestoreRegister()<CR>
+  nnoremap <silent> <leader>V :call SaveRegister()<CR>"zP:call RestoreRegister()<CR>
+  vnoremap <silent> <leader>V :call SaveRegister()<CR>"zP:call RestoreRegister()<CR>
+  " Using Ctrl+, for insert mode with saved register
+  inoremap <silent> <C-,> <C-r>=SaveRegister()<CR><C-r>z<C-r>=RestoreRegister()<CR>
+  inoremap <silent> <C-.> <Esc>:call SaveRegister()<CR>"zPi<C-r>=RestoreRegister()<CR>
+endif
